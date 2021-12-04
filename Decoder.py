@@ -17,7 +17,10 @@ def bitplane(bitImgVal , img1D ):
 imagepath = 'coded.png'             #Image with coded data
 filename = 'decoded_message.txt'    #File in which you want to save the decoded data
 
-img = cv2.imread(imagepath, cv2.IMREAD_GRAYSCALE)
+originalImg = cv2.imread(imagepath)
+
+img = originalImg[:,:,0]
+
 row ,col = img.shape
 
 

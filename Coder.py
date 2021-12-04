@@ -14,10 +14,17 @@ def bitplane(bitImgVal , img1D ):
 
 
 
+# imagepath = '4k_Test.jpg' #Image to find data into
 imagepath = 'lena.jfif' #Image to find data into
+
 filename = 'message.txt' #Data that you want to hide in a image
 
-img = cv2.imread(imagepath, cv2.IMREAD_GRAYSCALE)
+originalImg = cv2.imread(imagepath)
+
+img = originalImg[:,:,0]
+g = originalImg[:,:,1]
+r = originalImg[:,:,2]
+
 row ,col = img.shape
 
 imgIn1D = intToBitArray(img)
@@ -55,7 +62,14 @@ print("Coding done. Reconstrcting the image")
 full_img = eightbitimg + sevenbitimg + sixbiting + fivebiting + fourbiting + threebiting + twobiting + onebiting
 imgs = np.reshape(full_img,(row,col))
 imgs = imgs.astype(np.uint8)
-cv2.imwrite("coded.png",imgs)
-cv2.imshow("Coded Image",imgs)
+
+finalImg = np.zeros((row,col,3), 'uint8')
+
+finalImg[:,:,0] = imgs
+finalImg[:,:,1] = g
+finalImg[:,:,2] = r
+
+cv2.imwrite("coded.png",finalImg)
+cv2.imshow("Coded Image",finalImg)
 
 cv2.waitKey()
