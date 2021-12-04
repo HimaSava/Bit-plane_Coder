@@ -15,7 +15,7 @@ def bitplane(bitImgVal , img1D ):
 
 
 imagepath = 'coded.png'             #Image with coded data
-filename = 'decoded_message.txt'    #File in which you want to save the decoded data
+filename = ''    #File in which you want to save the decoded data
 
 originalImg = cv2.imread(imagepath)
 #Divide the layers into R,G and B
@@ -46,8 +46,14 @@ for i in range(0,onebiting.size-8,8):
 
 #Decoding the data
 text = ''
+flag = 0
 for i in data:
-    if i == '@':
+    if i == '@' and flag == 0:
+        filename = "Decoded_" + text
+        text = ''
+        flag = 1
+        continue
+    elif i == '@' and flag == 1:
         break
     text = text + i
 print("Your coded data is: ")

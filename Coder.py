@@ -16,8 +16,7 @@ def bitplane(bitImgVal , img1D ):
 
 # imagepath = '4k_Test.jpg' #Image to find data into
 imagepath = 'lena.jfif' #Image to find data into
-
-filename = 'message.txt' #Data that you want to hide in a image
+filename = 'code.txt' #Data that you want to hide in a image
 
 originalImg = cv2.imread(imagepath)
 
@@ -50,7 +49,9 @@ with open(filename, 'r') as csvfile:
   content = csvfile.read()  
 print("Coding " + str(len(content)) + " characters into the image")
 
-for i in content:
+secretCode = filename + "@" + content
+
+for i in secretCode:
 	text.append (np.binary_repr( ord(i) ,width=8  ) )
 text2 = ''
 for i in text:
