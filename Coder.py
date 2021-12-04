@@ -21,6 +21,8 @@ filename = 'message.txt' #Data that you want to hide in a image
 
 originalImg = cv2.imread(imagepath)
 
+#Split the image into R G and B layers
+#For now we are only coding in the Blue layer
 img = originalImg[:,:,0]
 g = originalImg[:,:,1]
 r = originalImg[:,:,2]
@@ -63,8 +65,9 @@ full_img = eightbitimg + sevenbitimg + sixbiting + fivebiting + fourbiting + thr
 imgs = np.reshape(full_img,(row,col))
 imgs = imgs.astype(np.uint8)
 
-finalImg = np.zeros((row,col,3), 'uint8')
 
+#Reconstruct the image adding RGB layers into a final image
+finalImg = np.zeros((row,col,3), 'uint8')
 finalImg[:,:,0] = imgs
 finalImg[:,:,1] = g
 finalImg[:,:,2] = r

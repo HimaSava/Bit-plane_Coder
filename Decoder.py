@@ -18,7 +18,7 @@ imagepath = 'coded.png'             #Image with coded data
 filename = 'decoded_message.txt'    #File in which you want to save the decoded data
 
 originalImg = cv2.imread(imagepath)
-
+#Divide the layers into R,G and B
 img = originalImg[:,:,0]
 
 row ,col = img.shape
