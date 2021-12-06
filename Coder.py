@@ -14,9 +14,10 @@ def bitplane(bitImgVal , img1D ):
 
 
 
-# imagepath = '4k_Test.jpg' #Image to find data into
-imagepath = 'lena.jfif' #Image to find data into
-filename = 'code.txt' #Data that you want to hide in a image
+imagepath = '4k_Test.jpg' #Image to find data into
+# imagepath = 'lena.jfif' #Image to find data into
+filename = "Bit-plane_Coder.zip" #Data that you want to hide in a image
+
 
 originalImg = cv2.imread(imagepath)
 
@@ -44,16 +45,69 @@ onebiting = np.array( bitplane(7,imgIn1D) ) * 1
 
 # print(onebiting.shape)
 print("Number of letters allowed are: " + str(int(onebiting.size/8)))
+
+data = []
+secretCode = filename + "@" 
+with open(filename, 'rb') as file:
+    while True:
+        byte = file.read(1)
+        if not byte:
+            break
+        data.append(byte[0])
+
+#Adding below bytes to detect EOF
+#This works but is a very dirty way of doing it so pls HELP :(
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(0)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(1)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(3)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+data.append(5)
+
+
 text = []
-with open(filename, 'r') as csvfile:   
-  content = csvfile.read()  
-print("Coding " + str(len(content)) + " characters into the image")
-
-secretCode = filename + "@" + content
-
 for i in secretCode:
-	text.append (np.binary_repr( ord(i) ,width=8  ) )
+	text.append(np.binary_repr( ord(i) ,width=8  ) )
+
+for i in data:
+    text.append(np.binary_repr( i ,width=8  ) )
+
 text2 = ''
+
 for i in text:
 	text2 = text2+i
 for i in range(0,len(text2)):
@@ -74,6 +128,6 @@ finalImg[:,:,1] = g
 finalImg[:,:,2] = r
 
 cv2.imwrite("coded.png",finalImg)
-cv2.imshow("Coded Image",finalImg)
+# cv2.imshow("Coded Image",finalImg)
 
 cv2.waitKey()
