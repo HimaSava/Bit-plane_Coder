@@ -10,7 +10,7 @@ img = originalImg[:,:,0]
 
 row ,col = img.shape
 
-# Convert the image to 1D array
+
 imgInArr = []
 for i in range(row):
     for j in range(col):
@@ -39,7 +39,6 @@ for i in range(0,len(imgInArr)-8,8):
         currentData = int(blank,2).to_bytes(1,"little")
         data.append(currentData)
 
-#Looking for EOF
 hiddendata = []
 for i in range(len(data)-39):
     flag=0

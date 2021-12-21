@@ -1,22 +1,10 @@
 import numpy as np
 import cv2
 
-def intToBitArray(img) :
-    list = []
-    for i in range(row):
-        for j in range(col):
-             list.append (np.binary_repr( img[i][j] ,width=8  ) )
-    return list
 
-def bitplane(bitImgVal , img1D ):
-    bitList = [  int(   i[bitImgVal]  )    for i in img1D]
-    return bitList
-
-
-
-imagepath = '4k_Test.jpg' #Image to find data into
+imagepath = 'Panda.jpg' #Image to find data into
 # imagepath = 'lena.jfif' #Image to find data into
-filename = "Bit-plane_Coder.zip" #Data that you want to hide in a image
+filename = "Decoder.py" #Data that you want to hide in a image
 
 
 originalImg = cv2.imread(imagepath)
@@ -28,24 +16,13 @@ g = originalImg[:,:,1]
 r = originalImg[:,:,2]
 
 row ,col = img.shape
+# Change the image to 1D array
+imgIn1D = []
+for i in range(row):
+    for j in range(col):
+            imgIn1D.append (img[i][j])
 
-imgIn1D = intToBitArray(img)
-imgIn2D = np.reshape(imgIn1D , (row,col) )
-
-#Split the img into the 8 bit planes
-eightbitimg = np.array( bitplane(0, imgIn1D ) ) * 128
-sevenbitimg = np.array( bitplane(1,imgIn1D) ) * 64
-sixbiting = np.array( bitplane(2,imgIn1D) ) * 32
-fivebiting = np.array( bitplane(3,imgIn1D) ) * 16
-fourbiting = np.array( bitplane(4,imgIn1D) ) * 8
-threebiting = np.array( bitplane(5,imgIn1D) ) * 4
-twobiting = np.array( bitplane(6,imgIn1D) ) * 2
-onebiting = np.array( bitplane(7,imgIn1D) ) * 1
-
-
-# print(onebiting.shape)
-print("Number of letters allowed are: " + str(int(onebiting.size/8)))
-
+#Read the file to be hidden
 data = []
 secretCode = filename + "@" 
 with open(filename, 'rb') as file:
@@ -57,67 +34,35 @@ with open(filename, 'rb') as file:
 
 #Adding below bytes to detect EOF
 #This works but is a very dirty way of doing it so pls HELP :(
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(0)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(1)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(3)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
-data.append(5)
+for i in range(0,8,2):
+    for j in range(10):
+        data.append(i)
+    
 
-
+#Adding file name to code
 text = []
 for i in secretCode:
 	text.append(np.binary_repr( ord(i) ,width=8  ) )
 
+#Change the data to binary form
 for i in data:
     text.append(np.binary_repr( i ,width=8  ) )
 
-text2 = ''
 
+#Combining file name + data
+text2 = ''
 for i in text:
 	text2 = text2+i
-for i in range(0,len(text2)):
-	onebiting[i] = text2[i]
 
-print("Coding done. Reconstrcting the image")
+#Check if the last bit is 0 or 1, and according to data change it
+for i in range(len(text2)):
+    if(int(text2[i])%2 == 0 and imgIn1D[i]%2==1):
+        imgIn1D[i] = imgIn1D[i] + 1
+    elif(int(text2[i])%2 == 1 and imgIn1D[i]%2==0):
+        imgIn1D[i] = imgIn1D[i] - 1
 
-#Reconstruct the image by adding all the planes back together
-full_img = eightbitimg + sevenbitimg + sixbiting + fivebiting + fourbiting + threebiting + twobiting + onebiting
-imgs = np.reshape(full_img,(row,col))
+#Convert the 1D array to 2D array
+imgs = np.reshape(imgIn1D,(row,col))
 imgs = imgs.astype(np.uint8)
 
 
@@ -127,7 +72,5 @@ finalImg[:,:,0] = imgs
 finalImg[:,:,1] = g
 finalImg[:,:,2] = r
 
+#Write the coded image
 cv2.imwrite("coded.png",finalImg)
-# cv2.imshow("Coded Image",finalImg)
-
-cv2.waitKey()
