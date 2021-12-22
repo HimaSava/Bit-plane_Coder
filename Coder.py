@@ -1,10 +1,10 @@
 import numpy as np
 import cv2
 
-
-imagepath = 'Panda.jpg' #Image to find data into
+imagepath = '4k_Test.jpg'
+# imagepath = 'Panda.jpg' #Image to find data into
 # imagepath = 'lena.jfif' #Image to find data into
-filename = "Decoder.py" #Data that you want to hide in a image
+filename = "Bit-plane_Coder.zip" #Data that you want to hide in a image
 
 
 originalImg = cv2.imread(imagepath)

@@ -21,6 +21,10 @@ for i in range(row):
 file =[]
 data = []
 flag =  0
+#Create a buffer for the read data. If the data matches the EOF then break
+buffer = []
+a = []
+b = [0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,4,4,4,4,4,4,4,4,4,4,6,6,6,6,6,6,6,6,6,6] #EOF
 for i in range(0,len(imgInArr)-8,8):
     blank = ""
     for j in range(8):
@@ -37,23 +41,15 @@ for i in range(0,len(imgInArr)-8,8):
         file.append(character)
     else:
         currentData = int(blank,2).to_bytes(1,"little")
-        data.append(currentData)
-
-#Looking for EOF
-hiddendata = []
-for i in range(len(data)-39):
-    flag=0
-    for k in range(4):
-        for j in range(10):
-            if(data[i+j+k*10][0]!=k*2):
-                flag = 1
+        a.append(currentData[0])
+        buffer.append(currentData)
+        if(len(a)>=40):
+            if(a[0:40] == b):
                 break
-        if flag == 1:
-            break
- 
-    if flag == 0:
-        break
-    hiddendata.append(data[i])
+            else:
+                data.append(buffer[0])
+                a.pop(0)
+                buffer.pop(0)
 
 #Modifying the filename
 filename = "Decoded_" 
@@ -62,7 +58,6 @@ for i in file:
 
 #Saving the data into the file
 with open(filename, 'wb') as file:
-    for i in hiddendata:
+    for i in data:
         file.write(i)
-
 
